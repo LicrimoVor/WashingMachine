@@ -7,13 +7,14 @@
 
 struct Modes
 {
-    uint16_t temperature;
-    uint16_t speed_rising;
-    uint16_t time;
-    uint16_t speed_washing = "???";
+    uint32_t temperature;
+    uint32_t speed_rising;
+    uint32_t time;
+    int speed_washing = 00000000;
+    Motor motor;
 
-    Modes(uint16_t temperature, uint16_t speed_rising, uint16_t time);
-
+    Modes(Motor motor): motor(motor) {};
+    void set_params(uint32_t temperature, int speed_rising, uint32_t time);
     void pre_washing();
     void main_washing();
     void rising();

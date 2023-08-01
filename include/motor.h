@@ -1,10 +1,25 @@
 #pragma once
+
 #include <Arduino.h>
+#include <GyverPID.h>
+#include <Tachometer.h>
 
-void set_motor_speed(int speed_motor);
+struct Motor
+{
+    uint32_t timmer_alpha;
+    uint32_t get_speed();
+    void set_speed(int speed_motor);
+    Motor(int pin_motor, int pin_zero, int pin_tacho);
+    void _isr_tacho();
+    void _isr_zero();
+private:
+    int pin_motor;
+    int pin_zero;
+    int pin_tacho;
+    uint32_t timmer_zero;
+    GyverPID regulator;
+    Tachometer tacho;
+    bool flag_alpha = 0;
+};
 
-uint32_t get_timmer_alpha();
-
-void setup_motor();
-
-void zero_controller();
+#include "realization/motor.cpp" // WTF?!?!?!??!?!?!?!?

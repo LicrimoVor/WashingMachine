@@ -1,8 +1,6 @@
 #define TACH_PIN 3    // пин тахометра 
 
 #include <Tachometer.h>
-#include "tacho.h"
-
 Tachometer tacho;
 
 void setup_tachometer(){
@@ -12,8 +10,7 @@ void setup_tachometer(){
 
 
 void isr() {
-  tacho.tick();
-  // сообщаем библиотеке об этом
+  tacho.tick();   // сообщаем библиотеке об этом
 }
 
 
