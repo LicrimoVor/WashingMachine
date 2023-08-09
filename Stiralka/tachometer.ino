@@ -3,9 +3,11 @@
 #include <Tachometer.h>
 Tachometer tacho;
 
+
 void setup_tachometer(){
   attachInterrupt(1, isr, FALLING);
   pinMode(TACH_PIN, INPUT);
+  tacho.setWindow(50);
 }
 
 

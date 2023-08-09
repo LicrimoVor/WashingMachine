@@ -1,0 +1,104 @@
+//
+// !!! WARNING !!! AUTO-GENERATED FILE!
+// PLEASE DO NOT MODIFY IT AND USE "platformio.ini":
+// https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags
+//
+{
+    "configurations": [
+        {
+            "name": "PlatformIO",
+            "includePath": [
+                "c:/Disk D/Programm's/Arduino/stiralka/include",
+                "c:/Disk D/Programm's/Arduino/stiralka/src",
+                "c:/Disk D/Programm's/Arduino/stiralka/.pio/libdeps/nanoatmega328/Tachometer/src",
+                "c:/Disk D/Programm's/Arduino/stiralka/.pio/libdeps/nanoatmega328/GyverPID/src",
+                "C:/Users/mrlic/.platformio/packages/framework-arduino-avr/cores/arduino",
+                "C:/Users/mrlic/.platformio/packages/framework-arduino-avr/variants/eightanaloginputs",
+                "C:/Users/mrlic/AppData/Local/Arduino15/libraries/Arduino_BuiltIn/src",
+                "C:/Users/mrlic/AppData/Local/Arduino15/libraries/Ethernet/src",
+                "C:/Users/mrlic/AppData/Local/Arduino15/libraries/Firmata",
+                "C:/Users/mrlic/AppData/Local/Arduino15/libraries/Firmata/utility",
+                "C:/Users/mrlic/AppData/Local/Arduino15/libraries/Keyboard/src",
+                "C:/Users/mrlic/AppData/Local/Arduino15/libraries/LiquidCrystal/src",
+                "C:/Users/mrlic/AppData/Local/Arduino15/libraries/Mouse/src",
+                "C:/Users/mrlic/AppData/Local/Arduino15/libraries/SD/src",
+                "C:/Users/mrlic/AppData/Local/Arduino15/libraries/Servo/src",
+                "C:/Users/mrlic/AppData/Local/Arduino15/libraries/Stepper/src",
+                "C:/Users/mrlic/AppData/Local/Arduino15/libraries/TFT/src",
+                "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/AccelStepper/src",
+                "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/And_Timer",
+                "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/GyverButton/src",
+                "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/GyverMotor/src",
+                "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/GyverNTC/src",
+                "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/GyverPID/src",
+                "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/GyverStepper/src",
+                "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/GyverTimers/src",
+                "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/LiquidCrystal_I2C_Hangul/src",
+                "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/Tachometer/src",
+                "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/jm_LiquidCrystal_I2C",
+                "C:/Users/mrlic/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+                "C:/Users/mrlic/.platformio/packages/framework-arduino-avr/libraries/HID/src",
+                "C:/Users/mrlic/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+                "C:/Users/mrlic/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
+                "C:/Users/mrlic/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
+                ""
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true,
+                "path": [
+                    "c:/Disk D/Programm's/Arduino/stiralka/include",
+                    "c:/Disk D/Programm's/Arduino/stiralka/src",
+                    "c:/Disk D/Programm's/Arduino/stiralka/.pio/libdeps/nanoatmega328/Tachometer/src",
+                    "c:/Disk D/Programm's/Arduino/stiralka/.pio/libdeps/nanoatmega328/GyverPID/src",
+                    "C:/Users/mrlic/.platformio/packages/framework-arduino-avr/cores/arduino",
+                    "C:/Users/mrlic/.platformio/packages/framework-arduino-avr/variants/eightanaloginputs",
+                    "C:/Users/mrlic/AppData/Local/Arduino15/libraries/Arduino_BuiltIn/src",
+                    "C:/Users/mrlic/AppData/Local/Arduino15/libraries/Ethernet/src",
+                    "C:/Users/mrlic/AppData/Local/Arduino15/libraries/Firmata",
+                    "C:/Users/mrlic/AppData/Local/Arduino15/libraries/Firmata/utility",
+                    "C:/Users/mrlic/AppData/Local/Arduino15/libraries/Keyboard/src",
+                    "C:/Users/mrlic/AppData/Local/Arduino15/libraries/LiquidCrystal/src",
+                    "C:/Users/mrlic/AppData/Local/Arduino15/libraries/Mouse/src",
+                    "C:/Users/mrlic/AppData/Local/Arduino15/libraries/SD/src",
+                    "C:/Users/mrlic/AppData/Local/Arduino15/libraries/Servo/src",
+                    "C:/Users/mrlic/AppData/Local/Arduino15/libraries/Stepper/src",
+                    "C:/Users/mrlic/AppData/Local/Arduino15/libraries/TFT/src",
+                    "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/AccelStepper/src",
+                    "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/And_Timer",
+                    "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/GyverButton/src",
+                    "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/GyverMotor/src",
+                    "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/GyverNTC/src",
+                    "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/GyverPID/src",
+                    "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/GyverStepper/src",
+                    "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/GyverTimers/src",
+                    "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/LiquidCrystal_I2C_Hangul/src",
+                    "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/Tachometer/src",
+                    "C:/Users/mrlic/OneDrive/Документы/Arduino/libraries/jm_LiquidCrystal_I2C",
+                    "C:/Users/mrlic/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+                    "C:/Users/mrlic/.platformio/packages/framework-arduino-avr/libraries/HID/src",
+                    "C:/Users/mrlic/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+                    "C:/Users/mrlic/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
+                    "C:/Users/mrlic/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
+                    ""
+                ]
+            },
+            "defines": [
+                "PLATFORMIO=60109",
+                "ARDUINO_AVR_NANO",
+                "F_CPU=16000000L",
+                "ARDUINO_ARCH_AVR",
+                "ARDUINO=10808",
+                "__AVR_ATmega328P__",
+                ""
+            ],
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++11",
+            "compilerPath": "C:/Users/mrlic/.platformio/packages/toolchain-atmelavr/bin/avr-gcc.exe",
+            "compilerArgs": [
+                "-mmcu=atmega328p",
+                ""
+            ]
+        }
+    ],
+    "version": 4
+}
