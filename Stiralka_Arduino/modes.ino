@@ -1,3 +1,4 @@
+
 struct Stirka {
   public:
     // time_wash - продолжительность стирки в мс

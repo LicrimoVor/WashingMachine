@@ -1,6 +1,7 @@
 #define PIN_TENA 8
 #define PIN_TEMP A4
 
+
 void setup_temp() {
   pinMode(PIN_TEMP, INPUT);
   pinMode(PIN_TENA, OUTPUT);
