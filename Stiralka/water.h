@@ -14,21 +14,31 @@ public:
     digitalWrite(pin_pump, LOW);
   }
 
-  void set_valve_1(bool open_close){
-  // предварительная стирка
-  digitalWrite(pin_valve_1, open_close);
-  }
-
-  void set_valve_2(bool open_close){
-  digitalWrite(pin_valve_2, open_close);
+  void set_wash(bool valve_1, bool valve_2){
+    // установка клапанов
+    if (!check_water()){
+      digitalWrite(pin_valve_1, valve_1);
+      digitalWrite(pin_valve_2, valve_2);
+    }
+    else {
+      digitalWrite(pin_valve_1, LOW);
+      digitalWrite(pin_valve_2, LOW);
+    }
   }
 
   void set_pump(bool open_close) {
-  digitalWrite(pin_pump, open_close);
+    gitalWrite(pin_pump, open_close);
   }
 
-  int check_water() {
-  return analogRead(pin_lvl_water);
+  bool check_water() {
+    uint32_t time = 0;
+    if (analogRead(pin_lvl_water) > 500){
+      time = millis();
+    }
+    if (millis() - time > 1000) {
+      return false;
+    }
+    return true;
   }
 
 private:
@@ -37,6 +47,3 @@ private:
   uint8_t pin_pump;
   uint8_t pin_lvl_water;
 };
-
-
-

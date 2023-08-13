@@ -6,29 +6,38 @@
 #define PIN_TENA 8
 #define PIN_TEMP A4
 
-#define TACH_PIN 3    // пин тахометра 
+#define TACH_PIN 3
+
+#define PIN_CHECK_LOCK_DOOR A0
+#define PIN_SETUP_LOCK_DOOR 9
+
+#define PIN_MOTOR 4
+#define PIN_ZERO 2
+#define PIN_DERICTION_1 A2
+#define PIN_DERICTION_2 A3
+#define NUMB_INTERRUPT 0
 
 #include <Arduino.h>
-#include "water.h"
-#include "temperature.h"
+#include "fasad.h"
 #include "tachometer.h"
-#include "motor.h"
-#include "door.h"
 
-Water water(PIN_VALVE_1, PIN_VALVE_2, PIN_PUMP, PIN_LVL_WATER);
-Temprature temperature(PIN_TENA, PIN_TEMP);
 
-uint32_t speed_motor__;
+Fasade fasade;
 
 void setup() {
   Serial.begin(9600);
   setup_tachometer(TACH_PIN);
+  fasade.setup_temperature(PIN_TENA, PIN_TEMP);
+  fasade.setup_water(PIN_VALVE_1, PIN_VALVE_2, PIN_PUMP, PIN_LVL_WATER);
+  fasade.setup_door(PIN_CHECK_LOCK_DOOR, PIN_SETUP_LOCK_DOOR);
+  fasade.setup_motor(PIN_MOTOR, PIN_ZERO, PIN_DERICTION_1, PIN_DERICTION_2, NUMB_INTERRUPT);
 }
 
 void loop() {
-  static uint32_t tmr;
-  motor_work(speed_motor__);
+
   parsing();
+
+  static uint32_t tmr;
   if (millis() - tmr > 100) {
     tmr = millis();
     Serial.print(speed_motor__);
@@ -43,15 +52,15 @@ void loop() {
   }
 }
 
+
 void parsing() {
   if (Serial.available() > 1) {
-    
     char incoming = Serial.read();
     float value = Serial.parseFloat();
     switch (incoming) {
-//      case 'p': regulator.Kp = value; break;
-//      case 'i': regulator.Ki = value; break;
-//      case 'd': regulator.Kd = value; break;
+      case 'p': regulator.Kp = value; break;
+      case 'i': regulator.Ki = value; break;
+      case 'd': regulator.Kd = value; break;
       case 's': speed_motor__=value; break;
       case 'z': change_deriction(value); break;
       case 'e': motor_stop(); break;

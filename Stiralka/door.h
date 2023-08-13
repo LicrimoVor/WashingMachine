@@ -1,23 +1,34 @@
-#define PIN_CHECK_LOCK_DOOR A0
-#define PIN_SETUP_LOCK_DOOR 9
 #include <Arduino.h>
 
-void setup_door() {
-  pinMode(PIN_SETUP_LOCK_DOOR, OUTPUT);
-  pinMode(PIN_CHECK_LOCK_DOOR, INPUT);
-  digitalWrite(PIN_SETUP_LOCK_DOOR, HIGH);
-}
 
+struct Door{
+  Door(uint8_t pin_chek, uint8_t pin_setup):
+    pin_chek(pin_chek), pin_setup(pin_setup) {
+      pinMode(pin_setup, OUTPUT);
+      pinMode(pin_chek, INPUT);
+      digitalWrite(pin_setup, HIGH);
+    }
 
-void close_door(){
-  digitalWrite(PIN_SETUP_LOCK_DOOR, LOW);
-}
+  void close_door(){
+    digitalWrite(pin_setup, LOW);
+  }
 
+  void open_door() {
+    digitalWrite(pin_setup, HIGH);
+  }
 
-void open_door() {
-  digitalWrite(PIN_SETUP_LOCK_DOOR, HIGH);
-}
+  bool check_door() {
+    uint32_t time = 0;
+    if (analogRead(pin_chek) > 500){
+      time = millis();
+    }
+    if (millis() - time > 1000) {
+      return false;
+    }
+    return true;
+  }
 
-int check_door() {
-  return analogRead(PIN_CHECK_LOCK_DOOR);
+private:
+  uint8_t pin_chek;
+  uint8_t pin_setup;
 }
