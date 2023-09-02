@@ -1,3 +1,4 @@
+#line 1 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\Stiralka.ino"
 #define PIN_VALVE_1 5
 #define PIN_VALVE_2 6
 #define PIN_PUMP 7
@@ -23,6 +24,13 @@
 
 Fasade fasade;
 
+#line 26 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\Stiralka.ino"
+void setup();
+#line 35 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\Stiralka.ino"
+void loop();
+#line 41 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\Stiralka.ino"
+void parsing();
+#line 26 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\Stiralka.ino"
 void setup() {
   Serial.begin(9600);
   setup_tachometer(TACH_PIN);
@@ -48,3 +56,4 @@ void parsing() {
     }
   }
 }
+

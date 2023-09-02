@@ -2,7 +2,7 @@
 #include <GyverPID.h>
 #include <GyverTimers.h>
 #include <GyverMotor.h>
-#include "tachometer.h"
+#include "tacho.cpp"
 
 uint8_t pin_motor;
 uint32_t timmer_alpha;
@@ -26,6 +26,8 @@ ISR(TIMER2_A) {
 struct Motor{
   Motor(uint8_t pin_motor_, uint8_t pin_zero, uint8_t pin_deriction_1, uint8_t pin_deriction_2, uint8_t numb_interapt):
     pin_zero(pin_zero), pin_deriction_1(pin_deriction_1), pin_deriction_2(pin_deriction_2){
+    GyverPID _regulator(0.15, 0.1, 0.004, 100);
+    regulator = _regulator;
     pin_motor = pin_motor_;
     attachInterrupt(numb_interapt, zero_controller, CHANGE);
     pinMode(pin_zero, INPUT);
@@ -59,8 +61,8 @@ struct Motor{
 private:
   //GyverPID regulator(0.51, 3.38, 0.02, 100);
   //GyverPID regulator(0.5, 0.9, 0.008, 100);
-  GyverPID regulator(0.15, 0.1, 0.004, 100);
+  GyverPID regulator;
   uint8_t pin_zero;
   uint8_t pin_deriction_1;
   uint8_t pin_deriction_2;
-}
+};

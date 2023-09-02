@@ -18,8 +18,8 @@
 #define NUMB_INTERRUPT 0
 
 #include <Arduino.h>
-#include "tacho.cpp"
-#include "fasad.cpp"
+// #include "tacho.ino"
+#include "fasad.h"
 
 Fasade fasade;
 

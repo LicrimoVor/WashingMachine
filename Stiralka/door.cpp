@@ -18,7 +18,7 @@ struct Door{
   }
 
   bool check_door() {
-    uint32_t time = 0;
+    uint32_t static time = 0;
     if (analogRead(pin_chek) > 500){
       time = millis();
     }
@@ -31,4 +31,4 @@ struct Door{
 private:
   uint8_t pin_chek;
   uint8_t pin_setup;
-}
+};

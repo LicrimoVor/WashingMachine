@@ -1,3 +1,4 @@
+#line 1 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\water.cpp"
 #include <Arduino.h>
 
 struct Water{
@@ -15,23 +16,16 @@ public:
   }
 
   void set_wash(bool valve_1, bool valve_2){
-    // установка клапанов
-    if (!check_water()){
-      digitalWrite(pin_valve_1, valve_1);
-      digitalWrite(pin_valve_2, valve_2);
-    }
-    else {
-      digitalWrite(pin_valve_1, LOW);
-      digitalWrite(pin_valve_2, LOW);
-    }
+    digitalWrite(pin_valve_1, valve_1);
+    digitalWrite(pin_valve_2, valve_2);
   }
 
   void set_pump(bool open_close) {
-    gitalWrite(pin_pump, open_close);
+    digitalWrite(pin_pump, open_close);
   }
 
   bool check_water() {
-    uint32_t time = 0;
+    uint32_t static time = 0;
     if (analogRead(pin_lvl_water) > 500){
       time = millis();
     }

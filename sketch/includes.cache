@@ -1,0 +1,82 @@
+[
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "C:\\Users\\mrlic\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\cores\\arduino"
+  },
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "C:\\Users\\mrlic\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\variants\\eightanaloginputs"
+  },
+  {
+    "Sourcefile": "C:\\Disk D\\Programm's\\Arduino\\stiralka\\sketch\\sketch\\Stiralka.ino.cpp",
+    "Include": "Tachometer.h",
+    "Includepath": "C:\\Users\\mrlic\\OneDrive\\Документы\\Arduino\\libraries\\Tachometer\\src"
+  },
+  {
+    "Sourcefile": "C:\\Disk D\\Programm's\\Arduino\\stiralka\\sketch\\sketch\\Stiralka.ino.cpp",
+    "Include": "GyverPID.h",
+    "Includepath": "C:\\Users\\mrlic\\OneDrive\\Документы\\Arduino\\libraries\\GyverPID\\src"
+  },
+  {
+    "Sourcefile": "C:\\Disk D\\Programm's\\Arduino\\stiralka\\sketch\\sketch\\Stiralka.ino.cpp",
+    "Include": "GyverTimers.h",
+    "Includepath": "C:\\Users\\mrlic\\OneDrive\\Документы\\Arduino\\libraries\\GyverTimers\\src"
+  },
+  {
+    "Sourcefile": "C:\\Disk D\\Programm's\\Arduino\\stiralka\\sketch\\sketch\\Stiralka.ino.cpp",
+    "Include": "GyverMotor.h",
+    "Includepath": "C:\\Users\\mrlic\\OneDrive\\Документы\\Arduino\\libraries\\GyverMotor\\src"
+  },
+  {
+    "Sourcefile": "C:\\Disk D\\Programm's\\Arduino\\stiralka\\sketch\\sketch\\Stiralka.ino.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Disk D\\Programm's\\Arduino\\stiralka\\sketch\\sketch\\door.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Disk D\\Programm's\\Arduino\\stiralka\\sketch\\sketch\\fasad.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Disk D\\Programm's\\Arduino\\stiralka\\sketch\\sketch\\motor.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Disk D\\Programm's\\Arduino\\stiralka\\sketch\\sketch\\tacho.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Disk D\\Programm's\\Arduino\\stiralka\\sketch\\sketch\\temperature.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Disk D\\Programm's\\Arduino\\stiralka\\sketch\\sketch\\washing.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Disk D\\Programm's\\Arduino\\stiralka\\sketch\\sketch\\water.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\mrlic\\OneDrive\\Документы\\Arduino\\libraries\\GyverTimers\\src\\GyverTimers.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\mrlic\\OneDrive\\Документы\\Arduino\\libraries\\GyverMotor\\src\\GyverMotor.cpp",
+    "Include": "",
+    "Includepath": null
+  }
+]

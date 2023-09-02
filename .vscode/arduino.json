@@ -1,6 +1,6 @@
 {
+    "sketch": "Stiralka\\Stiralka.ino",
     "configuration": "cpu=atmega328old",
     "board": "arduino:avr:nano",
-    "programmer": "avrisp",
-    "sketch": "Stiralka\\Stiralka.ino"
+    "output": "sketch"
 }

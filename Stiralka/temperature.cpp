@@ -31,4 +31,4 @@ private:
   void on_tena(bool off_on){
     digitalWrite(pin_tena, off_on);
   }
-}
+};
