@@ -3,8 +3,6 @@
 #define PIN_PUMP 7
 #define PIN_LVL A1
 
-#include <Arduino.h>
-
 
 namespace Water {
 void setup_water() {
@@ -15,15 +13,18 @@ void setup_water() {
   digitalWrite(PIN_VALVE_1, HIGH);
   digitalWrite(PIN_VALVE_2, HIGH);
   digitalWrite(PIN_PUMP, LOW);
+  // Serial.println("SETUP_WATER");
 }
 
 void set_wash(bool valve_1, bool valve_2) {
   digitalWrite(PIN_VALVE_1, valve_1);
   digitalWrite(PIN_VALVE_2, valve_2);
+  Serial.println("do water");
 }
 
-void set_pump(bool open_close) {
-  digitalWrite(PIN_PUMP, open_close);
+void set_pump(bool close_open) {
+  digitalWrite(PIN_PUMP, close_open);
+  // Serial.println("OUTPUT_WATER");
 }
 
 bool check_water() {
@@ -36,4 +37,8 @@ bool check_water() {
   }
   return true;
 }
+}
+
+void water_out(bool lol){
+  Water::set_pump(lol);
 }

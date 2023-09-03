@@ -3,7 +3,6 @@
 #define PIN_DERICTION_1 A2
 #define PIN_DERICTION_2 A3
 
-#include <Arduino.h>
 #include <GyverPID.h>
 #include <GyverTimers.h>
 #include <GyverMotor.h>
@@ -33,10 +32,11 @@ ISR(TIMER1_B) {
 void motor_stop() {
   digitalWrite(PIN_DERICTION_1, LOW);
   digitalWrite(PIN_DERICTION_2, LOW);
+  // Serial.println("MOTOR_STOP");
 }
 
 void setup_motor() {
-  attachInterrupt(digitalPinToInterrupt(PIN_ZERO), zero_controller, CHANGE);
+  attachInterrupt(0, zero_controller, CHANGE);
   pinMode(PIN_ZERO, INPUT);
   pinMode(PIN_MOTOR, OUTPUT);
   pinMode(PIN_DERICTION_1, OUTPUT);
@@ -45,6 +45,7 @@ void setup_motor() {
   regulator.setDirection(NORMAL);  // направление регулирования (NORMAL/REVERSE). ПО УМОЛЧАНИЮ СТОИТ NORMAL
   regulator.setLimits(100, 9500);  // пределы (ставим для 8 битного ШИМ). ПО УМОЛЧАНИЮ СТОЯТ 0 И 255
   Timer2.enableISR();
+  // Serial.println("SETUP_MOTOR");
 }
 
 void change_deriction() {
@@ -55,6 +56,7 @@ void change_deriction() {
 }
 
 void motor_work(int speed_motor) {
+  Serial.println("motor_work");
   regulator.setpoint = speed_motor * 138;
   regulator.input = Tacho::get_speed();
   timmer_alpha = 9500 - regulator.getResultTimer();

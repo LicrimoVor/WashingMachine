@@ -1,21 +1,23 @@
 #define PIN_CHECK_DOOR A0
 #define PIN_SETUP_DOOR 9
 
-#include <Arduino.h>
 
 namespace Door {
 void close_door() {
   digitalWrite(PIN_SETUP_DOOR, LOW);
+  Serial.println("DOOR_CLOSE");
+}
+
+void open_door() {
+  digitalWrite(PIN_SETUP_DOOR, HIGH);
+  Serial.println("DOOR_OPEN");
 }
 
 void setup_door() {
   pinMode(PIN_SETUP_DOOR, OUTPUT);
   pinMode(PIN_CHECK_DOOR, INPUT);
-  digitalWrite(PIN_SETUP_DOOR, HIGH);
-}
-
-void open_door() {
-  digitalWrite(PIN_SETUP_DOOR, HIGH);
+  open_door();
+  // Serial.println("SETUP_DOOR");
 }
 
 bool check_door() {

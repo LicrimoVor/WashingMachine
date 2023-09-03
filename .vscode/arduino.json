@@ -2,5 +2,6 @@
     "sketch": "Stiralka\\Stiralka.ino",
     "configuration": "cpu=atmega328old",
     "board": "arduino:avr:nano",
-    "output": "sketch"
+    "output": "sketch",
+    "port": "COM7"
 }

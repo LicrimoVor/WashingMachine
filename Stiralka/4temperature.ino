@@ -1,8 +1,6 @@
 #define PIN_TENA 8
 #define PIN_TEMP A4
 
-#include <Arduino.h>
-
 
 namespace Temperature {
 uint8_t temperature = 0;
@@ -11,6 +9,7 @@ void setup_temprature() {
   pinMode(PIN_TEMP, INPUT);
   pinMode(PIN_TENA, OUTPUT);
   digitalWrite(PIN_TENA, LOW);
+  // Serial.println("SETUP_TEMPERATURE");
 }
 
 float get_temp() {

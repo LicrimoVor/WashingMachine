@@ -1,25 +1,37 @@
 # 1 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\Stiralka.ino"
 # 2 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\Stiralka.ino" 2
 
-
+bool flag_start = false;
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(19200);
   setup_all();
 }
 
 void loop() {
   parsing();
-  main_wash();
+  uint32_t static __time = millis();
+  if (flag_start && millis() - __time > 100) {
+    main_wash();
+    __time = millis();
+  }
 }
 
 
 void parsing() {
   if (Serial.available() > 1) {
     char incoming = Serial.read();
-    float value = Serial.parseFloat();
+    int value = Serial.parseInt();
     switch (incoming) {
-      case 's': start_wash(value); break;
+      case 's':
+        Serial.println("start...");
+        flag_start = true;
+        start_wash(value);
+        break;
       case 'b': stop_wash(); break;
+      case 'z':
+        Serial.println("out water...");
+        water_out(value);
+        break;
     }
   }
 }
@@ -32,16 +44,19 @@ void parsing() {
 namespace Door {
 void close_door() {
   digitalWrite(9, 0x0);
+  Serial.println("DOOR_CLOSE");
+}
+
+void open_door() {
+  digitalWrite(9, 0x1);
+  Serial.println("DOOR_OPEN");
 }
 
 void setup_door() {
   pinMode(9, 0x1);
   pinMode(A0, 0x0);
-  digitalWrite(9, 0x1);
-}
-
-void open_door() {
-  digitalWrite(9, 0x1);
+  open_door();
+  // Serial.println("SETUP_DOOR");
 }
 
 bool check_door() {
@@ -76,6 +91,7 @@ void setup_tachometer() {
   attachInterrupt(1, isr, 2);
   pinMode(3, 0x0);
   tacho.setWindow(50);
+  // Serial.println("SETUP_TACHO");
 }
 }
 # 1 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\3motor.ino"
@@ -118,10 +134,11 @@ extern "C" void __vector_12 /* Timer/Counter1 Compare Match B */ (void) __attrib
 void motor_stop() {
   digitalWrite(A2, 0x0);
   digitalWrite(A3, 0x0);
+  // Serial.println("MOTOR_STOP");
 }
 
 void setup_motor() {
-  attachInterrupt(((2) == 2 ? 0 : ((2) == 3 ? 1 : -1)), zero_controller, 1);
+  attachInterrupt(0, zero_controller, 1);
   pinMode(2, 0x0);
   pinMode(4, 0x1);
   pinMode(A2, 0x1);
@@ -130,6 +147,7 @@ void setup_motor() {
   regulator.setDirection(0); // направление регулирования (NORMAL/REVERSE). ПО УМОЛЧАНИЮ СТОИТ NORMAL
   regulator.setLimits(100, 9500); // пределы (ставим для 8 битного ШИМ). ПО УМОЛЧАНИЮ СТОЯТ 0 И 255
   Timer2.enableISR();
+  // Serial.println("SETUP_MOTOR");
 }
 
 void change_deriction() {
@@ -140,6 +158,7 @@ void change_deriction() {
 }
 
 void motor_work(int speed_motor) {
+  Serial.println("motor_work");
   regulator.setpoint = speed_motor * 138;
   regulator.input = Tacho::get_speed();
   timmer_alpha = 9500 - regulator.getResultTimer();
@@ -159,6 +178,7 @@ void setup_temprature() {
   pinMode(A4, 0x0);
   pinMode(8, 0x1);
   digitalWrite(8, 0x0);
+  // Serial.println("SETUP_TEMPERATURE");
 }
 
 float get_temp() {
@@ -199,15 +219,18 @@ void setup_water() {
   digitalWrite(5, 0x1);
   digitalWrite(6, 0x1);
   digitalWrite(7, 0x0);
+  // Serial.println("SETUP_WATER");
 }
 
 void set_wash(bool valve_1, bool valve_2) {
   digitalWrite(5, valve_1);
   digitalWrite(6, valve_2);
+  Serial.println("do water");
 }
 
-void set_pump(bool open_close) {
-  digitalWrite(7, open_close);
+void set_pump(bool close_open) {
+  digitalWrite(7, close_open);
+  // Serial.println("OUTPUT_WATER");
 }
 
 bool check_water() {
@@ -220,6 +243,10 @@ bool check_water() {
   }
   return true;
 }
+}
+
+void water_out(bool lol){
+  Water::set_pump(lol);
 }
 # 1 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\6washing.ino"
 # 2 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\6washing.ino" 2
@@ -292,7 +319,10 @@ void variable_wash(uint8_t speed, uint32_t duration) {
       if (millis() > time_10_sec + 10000) {
         time_10_sec = millis() + duration;
         flag = !flag;
-        if (flag) { Motor::change_deriction(); }
+        if (flag) {
+          Motor::change_deriction();
+          Serial.println("change dir");
+        }
       }
     }
   }
@@ -300,11 +330,17 @@ void variable_wash(uint8_t speed, uint32_t duration) {
 
 void iter_wash() {
   bool static flag_0 = true;
+  bool static flag_print = true;
   if (millis() < timmer_work && flag_0) {
     variable_wash(speed_wash, 10000);
+    if (flag_print) {
+      Serial.println("motor_run");
+      flag_print = false;
+    }
   } else {
     // время полоскания 600000 (10 минут)
     bool static flag_1 = true;
+    flag_print = true;
     if (flag_1) {
       Motor::motor_work(0);
       Motor::motor_stop();
@@ -313,6 +349,7 @@ void iter_wash() {
       flag_1 = false;
       flag_0 = false;
       timmer_work = millis() + time_rinsing / 2;
+      Serial.println("ITER_1");
     } else {
       bool static flag_2 = true;
       if (flag_2) {
@@ -335,6 +372,7 @@ void iter_wash() {
           }
           timmer_work = millis() + time_rinsing / 2;
           flag_2 = false;
+          Serial.println("ITER_2");
         }
       } else {
         if (millis() < timmer_work + time_rinsing / 2) {
@@ -345,13 +383,12 @@ void iter_wash() {
           flag_2 = true;
           iterations -= 1;
           timmer_work = millis() + time_wash;
+          Serial.println("ITER_3");
         }
       }
     }
   }
 }
-
-
 
 void water_refresh() {
   if (!flag_pump_valve) {
@@ -389,7 +426,6 @@ bool end_wash() {
   return false;
 }
 
-
 bool main_wash() {
   if (flag_water) {
     water_refresh();
@@ -402,6 +438,7 @@ bool main_wash() {
         Temperature::set_temp(0);
       }
       iter_wash();
+      Serial.println("iter_end");
     } else {
       return end_wash();
     }
@@ -441,30 +478,50 @@ void start_wash(uint8_t mode) {
   Washing::create_washing(
     params_list[mode][0], params_list[mode][1],
     params_list[mode][2] * 60 * 1000, params_list[mode][2]);
+  Door::close_door();
   working = true;
+  Serial.println("START_WASH");
 }
 
 void stop_wash() {
   working = false;
+  Serial.println("STOP_WASH");
 }
 // };
 
 void main_wash() {
+  bool static flag_print = true;
   if (Door::check_door() && working) {
+    if (!flag_print) {
+      flag_print = true;
+    }
     if (Washing::main_wash()) {
       working = false;
     }
   } else {
-    if (Washing::stop_wash()) {
-      Door::open_door();
+    if (working) {
+      if (flag_print) {
+        Serial.println("close_door_plz");
+        flag_print = false;
+      }
+
+    } else {
+      if (Washing::stop_wash()) {
+        Door::open_door();
+        Serial.println("END_WASH");
+        if (!flag_print) {
+          flag_print = true;
+        }
+      }
     }
   }
 }
 
-void setup_all(){
+void setup_all() {
+  Tacho::setup_tachometer();
+  Motor::setup_motor();
   Temperature::setup_temprature();
   Water::setup_water();
   Door::setup_door();
-  Motor::setup_motor();
-  Tacho::setup_tachometer();
+  Serial.println("end_setup");
 }

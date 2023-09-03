@@ -1,4 +1,3 @@
-#include <Arduino.h>
 
 
 namespace Washing {
@@ -68,7 +67,10 @@ void variable_wash(uint8_t speed, uint32_t duration) {
       if (millis() > time_10_sec + 10000) {
         time_10_sec = millis() + duration;
         flag = !flag;
-        if (flag) { Motor::change_deriction(); }
+        if (flag) { 
+          Motor::change_deriction();
+          Serial.println("change dir");
+        }
       }
     }
   }
@@ -76,11 +78,17 @@ void variable_wash(uint8_t speed, uint32_t duration) {
 
 void iter_wash() {
   bool static flag_0 = true;
+  bool static flag_print = true;
   if (millis() < timmer_work && flag_0) {
     variable_wash(speed_wash, 10000);
+    if (flag_print) {
+      Serial.println("motor_run");
+      flag_print = false;
+    }
   } else {
     // время полоскания 600000 (10 минут)
     bool static flag_1 = true;
+    flag_print = true;
     if (flag_1) {
       Motor::motor_work(0);
       Motor::motor_stop();
@@ -89,6 +97,7 @@ void iter_wash() {
       flag_1 = false;
       flag_0 = false;
       timmer_work = millis() + time_rinsing / 2;
+      Serial.println("ITER_1");
     } else {
       bool static flag_2 = true;
       if (flag_2) {
@@ -111,6 +120,7 @@ void iter_wash() {
           }
           timmer_work = millis() + time_rinsing / 2;
           flag_2 = false;
+          Serial.println("ITER_2");
         }
       } else {
         if (millis() < timmer_work + time_rinsing / 2) {
@@ -121,13 +131,12 @@ void iter_wash() {
           flag_2 = true;
           iterations -= 1;
           timmer_work = millis() + time_wash;
+          Serial.println("ITER_3");
         }
       }
     }
   }
 }
-
-
 
 void water_refresh() {
   if (!flag_pump_valve) {
@@ -165,7 +174,6 @@ bool end_wash() {
   return false;
 }
 
-
 bool main_wash() {
   if (flag_water) {
     water_refresh();
@@ -178,6 +186,7 @@ bool main_wash() {
         Temperature::set_temp(0);
       }
       iter_wash();
+      Serial.println("iter_end");
     } else {
       return end_wash();
     }

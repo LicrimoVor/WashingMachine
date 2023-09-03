@@ -28,30 +28,50 @@ void start_wash(uint8_t mode) {
   Washing::create_washing(
     params_list[mode][0], params_list[mode][1],
     params_list[mode][2] * 60 * 1000, params_list[mode][2]);
+  Door::close_door();
   working = true;
+  Serial.println("START_WASH");
 }
 
 void stop_wash() {
   working = false;
+  Serial.println("STOP_WASH");
 }
 // };
 
 void main_wash() {
+  bool static flag_print = true;
   if (Door::check_door() && working) {
+    if (!flag_print) {
+      flag_print = true;
+    }
     if (Washing::main_wash()) {
       working = false;
     }
   } else {
-    if (Washing::stop_wash()) {
-      Door::open_door();
+    if (working) {
+      if (flag_print) {
+        Serial.println("close_door_plz");
+        flag_print = false;
+      }
+
+    } else {
+      if (Washing::stop_wash()) {
+        Door::open_door();
+        Serial.println("END_WASH");
+        if (!flag_print) {
+          flag_print = true;
+        }
+      }
     }
   }
 }
 
-void setup_all(){
+void setup_all() {
+  Tacho::setup_tachometer();
+  Motor::setup_motor();
   Temperature::setup_temprature();
   Water::setup_water();
   Door::setup_door();
-  Motor::setup_motor();
-  Tacho::setup_tachometer();
+  Serial.println("end_setup");
 }
