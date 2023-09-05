@@ -11,6 +11,7 @@ void isr() {
 }
 
 uint32_t get_speed() {
+  Serial.println("Get_speed");
   return tacho.getRPM();
 }
 

@@ -1,7 +1,7 @@
 # 1 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\Stiralka.ino"
-# 2 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\Stiralka.ino" 2
-
 bool flag_start = false;
+bool flag_test = false;
+
 void setup() {
   Serial.begin(19200);
   setup_all();
@@ -10,9 +10,13 @@ void setup() {
 void loop() {
   parsing();
   uint32_t static __time = millis();
-  if (flag_start && millis() - __time > 100) {
-    main_wash();
+  if (millis() - __time > 100) {
+    if (flag_start ) {main_wash();}
+    // Serial.println(__time);
     __time = millis();
+  }
+  if (flag_test) {
+    test_motor_work();
   }
 }
 
@@ -20,7 +24,7 @@ void loop() {
 void parsing() {
   if (Serial.available() > 1) {
     char incoming = Serial.read();
-    int value = Serial.parseInt();
+    int value = Serial.parseFloat();
     switch (incoming) {
       case 's':
         Serial.println("start...");
@@ -30,16 +34,27 @@ void parsing() {
       case 'b': stop_wash(); break;
       case 'z':
         Serial.println("out water...");
-        water_out(value);
+        test_water_out(value);
+        break;
+      case 'v':
+        test_speed();
+        break;
+      case 'd':
+        test_door(value);
+        break;
+      case 'w':
+        flag_test = value;
+        break;
+      case 'c':
+        test_change_deriction();
         break;
     }
   }
-}
+};
 # 1 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\1door.ino"
 
 
 
-# 5 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\1door.ino" 2
 
 namespace Door {
 void close_door() {
@@ -70,6 +85,11 @@ bool check_door() {
   return true;
 }
 }
+
+void test_door(bool lol) {
+  if (lol) {Door::close_door();}
+  else {Door::open_door();}
+}
 # 1 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\2tacho.ino"
 
 
@@ -84,6 +104,7 @@ void isr() {
 }
 
 uint32_t get_speed() {
+  Serial.println("Get_speed");
   return tacho.getRPM();
 }
 
@@ -103,7 +124,6 @@ void setup_tachometer() {
 # 7 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\3motor.ino" 2
 # 8 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\3motor.ino" 2
 # 9 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\3motor.ino" 2
-# 10 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\3motor.ino" 2
 
 
 namespace Motor {
@@ -123,9 +143,9 @@ void zero_controller() {
 }
 
 
-# 28 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\3motor.ino" 3
+# 27 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\3motor.ino" 3
 extern "C" void __vector_12 /* Timer/Counter1 Compare Match B */ (void) __attribute__ ((signal,used, externally_visible)) ; void __vector_12 /* Timer/Counter1 Compare Match B */ (void) 
-# 28 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\3motor.ino"
+# 27 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\3motor.ino"
              {
   digitalWrite(4, 1); // включаем симистор
   Timer2.stop(); // останавливаем таймер
@@ -152,23 +172,37 @@ void setup_motor() {
 
 void change_deriction() {
   bool static flag_der = false;
+  if (flag_der) {
+    digitalWrite(A2, 0x0);
+    digitalWrite(A3, 0x1);
+  }
+  else {
+    digitalWrite(A2, 0x1);
+    digitalWrite(A3, 0x0);
+  }
   flag_der = !flag_der;
-  digitalWrite(A2, flag_der);
-  digitalWrite(A3, !flag_der);
+  Serial.println("change dir");
 }
 
 void motor_work(int speed_motor) {
-  Serial.println("motor_work");
   regulator.setpoint = speed_motor * 138;
   regulator.input = Tacho::get_speed();
   timmer_alpha = 9500 - regulator.getResultTimer();
 }
 }
+
+void test_change_deriction(){
+  Motor::change_deriction();
+}
+
+
+void test_motor_work(){
+
+  Motor::motor_work(100);
+}
 # 1 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\4temperature.ino"
 
 
-
-# 5 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\4temperature.ino" 2
 
 
 namespace Temperature {
@@ -207,8 +241,6 @@ void support_temp() {
 
 
 
-# 7 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\5water.ino" 2
-
 
 namespace Water {
 void setup_water() {
@@ -245,11 +277,12 @@ bool check_water() {
 }
 }
 
-void water_out(bool lol){
+void test_water_out(bool lol){
+  if (lol) {Door::close_door();}
+  else {Door::open_door();}
   Water::set_pump(lol);
 }
 # 1 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\6washing.ino"
-# 2 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\6washing.ino" 2
 
 
 namespace Washing {
@@ -306,23 +339,17 @@ bool stop_wash() {
 }
 
 void variable_wash(uint8_t speed, uint32_t duration) {
-  uint32_t static time_10_sec = millis() + duration;
-  // 0 - не крутится, 1 - крутится
-  bool static flag = true;
+  uint32_t static time_duraction = millis();
 
-  if ((millis() < time_10_sec) && (flag)) {
+  if (millis() < time_duraction) {
     Motor::motor_work(speed_wash);
   } else {
-    if (millis() > time_10_sec) {
+    if (millis() > time_duraction) {
       Motor::motor_work(0);
       Motor::motor_stop();
-      if (millis() > time_10_sec + 10000) {
-        time_10_sec = millis() + duration;
-        flag = !flag;
-        if (flag) {
-          Motor::change_deriction();
-          Serial.println("change dir");
-        }
+      if (millis() > time_duraction + 10000) {
+        time_duraction = millis() + duration;
+        Motor::change_deriction();
       }
     }
   }
@@ -445,8 +472,16 @@ bool main_wash() {
   }
   return false;
 }
-
 };
+
+
+void test_speed() {
+  Serial.println("test_speed");
+  uint32_t time = millis();
+  while (millis() - time < 30000) {
+    Washing::variable_wash(60, 10000);
+  }
+}
 # 1 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\7fasad.ino"
 # 2 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\7fasad.ino" 2
 
@@ -487,7 +522,6 @@ void stop_wash() {
   working = false;
   Serial.println("STOP_WASH");
 }
-// };
 
 void main_wash() {
   bool static flag_print = true;

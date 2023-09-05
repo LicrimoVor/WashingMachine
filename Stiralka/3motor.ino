@@ -50,15 +50,31 @@ void setup_motor() {
 
 void change_deriction() {
   bool static flag_der = false;
+  if (flag_der) {
+    digitalWrite(PIN_DERICTION_1, LOW);
+    digitalWrite(PIN_DERICTION_2, HIGH);
+  }
+  else {
+    digitalWrite(PIN_DERICTION_1, HIGH);
+    digitalWrite(PIN_DERICTION_2, LOW);
+  }
   flag_der = !flag_der;
-  digitalWrite(PIN_DERICTION_1, flag_der);
-  digitalWrite(PIN_DERICTION_2, !flag_der);
+  Serial.println("change dir");
 }
 
 void motor_work(int speed_motor) {
-  Serial.println("motor_work");
   regulator.setpoint = speed_motor * 138;
   regulator.input = Tacho::get_speed();
   timmer_alpha = 9500 - regulator.getResultTimer();
 }
+}
+
+void test_change_deriction(){
+  Motor::change_deriction();
+}
+
+
+void test_motor_work(){
+  
+  Motor::motor_work(100);
 }

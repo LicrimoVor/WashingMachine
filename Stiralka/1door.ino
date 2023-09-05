@@ -31,3 +31,8 @@ bool check_door() {
   return true;
 }
 }
+
+void test_door(bool lol) {
+  if (lol) {Door::close_door();}
+  else {Door::open_door();}
+}

@@ -37,7 +37,6 @@ void stop_wash() {
   working = false;
   Serial.println("STOP_WASH");
 }
-// };
 
 void main_wash() {
   bool static flag_print = true;

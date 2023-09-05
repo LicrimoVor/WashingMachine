@@ -1,22 +1,31 @@
-#line 1 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\Stiralka.ino"
 #include <Arduino.h>
-
+#line 1 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\Stiralka.ino"
 bool flag_start = false;
+bool flag_test = false;
+
 #line 4 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\Stiralka.ino"
 void setup();
 #line 9 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\Stiralka.ino"
 void loop();
-#line 19 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\Stiralka.ino"
+#line 23 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\Stiralka.ino"
 void parsing();
-#line 44 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\5water.ino"
-void water_out(bool lol);
+#line 35 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\1door.ino"
+void test_door(bool lol);
+#line 72 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\3motor.ino"
+void test_change_deriction();
+#line 77 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\3motor.ino"
+void test_motor_work();
+#line 42 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\5water.ino"
+void test_water_out(bool lol);
+#line 193 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\6washing.ino"
+void test_speed();
 #line 27 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\7fasad.ino"
 void start_wash(uint8_t mode);
 #line 36 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\7fasad.ino"
 void stop_wash();
-#line 42 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\7fasad.ino"
+#line 41 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\7fasad.ino"
 void main_wash();
-#line 70 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\7fasad.ino"
+#line 69 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\7fasad.ino"
 void setup_all();
 #line 4 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\Stiralka.ino"
 void setup() {
@@ -27,9 +36,13 @@ void setup() {
 void loop() {
   parsing();
   uint32_t static __time = millis();
-  if (flag_start && millis() - __time > 100) {
-    main_wash();
+  if (millis() - __time > 100) {
+    if (flag_start ) {main_wash();}
+    // Serial.println(__time);
     __time = millis();
+  }
+  if (flag_test) {
+    test_motor_work();
   }
 }
 
@@ -37,7 +50,7 @@ void loop() {
 void parsing() {
   if (Serial.available() > 1) {
     char incoming = Serial.read();
-    int value = Serial.parseInt();
+    int value = Serial.parseFloat();
     switch (incoming) {
       case 's':
         Serial.println("start...");
@@ -47,17 +60,28 @@ void parsing() {
       case 'b': stop_wash(); break;
       case 'z':
         Serial.println("out water...");
-        water_out(value);
+        test_water_out(value);
+        break;
+      case 'v':
+        test_speed();
+        break;
+      case 'd':
+        test_door(value);
+        break;
+      case 'w':
+        flag_test = value;
+        break;
+      case 'c':
+        test_change_deriction();
         break;
     }
   }
-}
+};
 
 #line 1 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\1door.ino"
 #define PIN_CHECK_DOOR A0
 #define PIN_SETUP_DOOR 9
 
-#include <Arduino.h>
 
 namespace Door {
 void close_door() {
@@ -89,6 +113,11 @@ bool check_door() {
 }
 }
 
+void test_door(bool lol) {
+  if (lol) {Door::close_door();}
+  else {Door::open_door();}
+}
+
 #line 1 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\2tacho.ino"
 #define PIN_TACHO 3
 
@@ -103,6 +132,7 @@ void isr() {
 }
 
 uint32_t get_speed() {
+  Serial.println("Get_speed");
   return tacho.getRPM();
 }
 
@@ -121,7 +151,6 @@ void setup_tachometer() {
 #define PIN_DERICTION_1 A2
 #define PIN_DERICTION_2 A3
 
-#include <Arduino.h>
 #include <GyverPID.h>
 #include <GyverTimers.h>
 #include <GyverMotor.h>
@@ -169,23 +198,38 @@ void setup_motor() {
 
 void change_deriction() {
   bool static flag_der = false;
+  if (flag_der) {
+    digitalWrite(PIN_DERICTION_1, LOW);
+    digitalWrite(PIN_DERICTION_2, HIGH);
+  }
+  else {
+    digitalWrite(PIN_DERICTION_1, HIGH);
+    digitalWrite(PIN_DERICTION_2, LOW);
+  }
   flag_der = !flag_der;
-  digitalWrite(PIN_DERICTION_1, flag_der);
-  digitalWrite(PIN_DERICTION_2, !flag_der);
+  Serial.println("change dir");
 }
 
 void motor_work(int speed_motor) {
-  Serial.println("motor_work");
   regulator.setpoint = speed_motor * 138;
   regulator.input = Tacho::get_speed();
   timmer_alpha = 9500 - regulator.getResultTimer();
 }
 }
+
+void test_change_deriction(){
+  Motor::change_deriction();
+}
+
+
+void test_motor_work(){
+  
+  Motor::motor_work(100);
+}
+
 #line 1 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\4temperature.ino"
 #define PIN_TENA 8
 #define PIN_TEMP A4
-
-#include <Arduino.h>
 
 
 namespace Temperature {
@@ -225,8 +269,6 @@ void support_temp() {
 #define PIN_PUMP 7
 #define PIN_LVL A1
 
-#include <Arduino.h>
-
 
 namespace Water {
 void setup_water() {
@@ -263,11 +305,12 @@ bool check_water() {
 }
 }
 
-void water_out(bool lol){
+void test_water_out(bool lol){
+  if (lol) {Door::close_door();}
+  else {Door::open_door();}
   Water::set_pump(lol);
 }
 #line 1 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\6washing.ino"
-#include <Arduino.h>
 
 
 namespace Washing {
@@ -324,23 +367,17 @@ bool stop_wash() {
 }
 
 void variable_wash(uint8_t speed, uint32_t duration) {
-  uint32_t static time_10_sec = millis() + duration;
-  // 0 - не крутится, 1 - крутится
-  bool static flag = true;
+  uint32_t static time_duraction = millis();
 
-  if ((millis() < time_10_sec) && (flag)) {
+  if (millis() < time_duraction) {
     Motor::motor_work(speed_wash);
   } else {
-    if (millis() > time_10_sec) {
+    if (millis() > time_duraction) {
       Motor::motor_work(0);
       Motor::motor_stop();
-      if (millis() > time_10_sec + 10000) {
-        time_10_sec = millis() + duration;
-        flag = !flag;
-        if (flag) { 
-          Motor::change_deriction();
-          Serial.println("change dir");
-        }
+      if (millis() > time_duraction + 10000) {
+        time_duraction = millis() + duration;
+        Motor::change_deriction();
       }
     }
   }
@@ -463,8 +500,16 @@ bool main_wash() {
   }
   return false;
 }
-
 };
+
+
+void test_speed() {
+  Serial.println("test_speed");
+  uint32_t time = millis();
+  while (millis() - time < 30000) {
+    Washing::variable_wash(60, 10000);
+  }
+}
 
 #line 1 "C:\\Disk D\\Programm's\\Arduino\\stiralka\\Stiralka\\7fasad.ino"
 #include <Arduino.h>
@@ -506,7 +551,6 @@ void stop_wash() {
   working = false;
   Serial.println("STOP_WASH");
 }
-// };
 
 void main_wash() {
   bool static flag_print = true;

@@ -1,6 +1,6 @@
-
-
 bool flag_start = false;
+bool flag_test = false;
+
 void setup() {
   Serial.begin(19200);
   setup_all();
@@ -9,9 +9,13 @@ void setup() {
 void loop() {
   parsing();
   uint32_t static __time = millis();
-  if (flag_start && millis() - __time > 100) {
-    main_wash();
+  if (millis() - __time > 100) {
+    if (flag_start ) {main_wash();}
+    // Serial.println(__time);
     __time = millis();
+  }
+  if (flag_test) {
+    test_motor_work();
   }
 }
 
@@ -19,7 +23,7 @@ void loop() {
 void parsing() {
   if (Serial.available() > 1) {
     char incoming = Serial.read();
-    int value = Serial.parseInt();
+    int value = Serial.parseFloat();
     switch (incoming) {
       case 's':
         Serial.println("start...");
@@ -29,7 +33,19 @@ void parsing() {
       case 'b': stop_wash(); break;
       case 'z':
         Serial.println("out water...");
-        water_out(value);
+        test_water_out(value);
+        break;
+      case 'v':
+        test_speed();
+        break;
+      case 'd':
+        test_door(value);
+        break;
+      case 'w':
+        flag_test = value;
+        break;
+      case 'c':
+        test_change_deriction();
         break;
     }
   }

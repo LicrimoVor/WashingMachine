@@ -39,6 +39,8 @@ bool check_water() {
 }
 }
 
-void water_out(bool lol){
+void test_water_out(bool lol){
+  if (lol) {Door::close_door();}
+  else {Door::open_door();}
   Water::set_pump(lol);
 }

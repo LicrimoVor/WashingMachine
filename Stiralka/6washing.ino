@@ -54,23 +54,17 @@ bool stop_wash() {
 }
 
 void variable_wash(uint8_t speed, uint32_t duration) {
-  uint32_t static time_10_sec = millis() + duration;
-  // 0 - не крутится, 1 - крутится
-  bool static flag = true;
+  uint32_t static time_duraction = millis();
 
-  if ((millis() < time_10_sec) && (flag)) {
+  if (millis() < time_duraction) {
     Motor::motor_work(speed_wash);
   } else {
-    if (millis() > time_10_sec) {
+    if (millis() > time_duraction) {
       Motor::motor_work(0);
       Motor::motor_stop();
-      if (millis() > time_10_sec + 10000) {
-        time_10_sec = millis() + duration;
-        flag = !flag;
-        if (flag) { 
-          Motor::change_deriction();
-          Serial.println("change dir");
-        }
+      if (millis() > time_duraction + 10000) {
+        time_duraction = millis() + duration;
+        Motor::change_deriction();
       }
     }
   }
@@ -193,5 +187,13 @@ bool main_wash() {
   }
   return false;
 }
-
 };
+
+
+void test_speed() {
+  Serial.println("test_speed");
+  uint32_t time = millis();
+  while (millis() - time < 30000) {
+    Washing::variable_wash(60, 10000);
+  }
+}
