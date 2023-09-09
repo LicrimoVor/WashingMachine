@@ -28,13 +28,15 @@ bool valve_1, valve_2;
 void create_washing(uint16_t _temperature_wash, uint16_t _speed_press, uint32_t _time_wash, uint16_t _iterations) {
   temperature_wash = _temperature_wash;
   speed_press = _speed_press;
-  time_wash = _time_wash;
+  time_wash = _time_wash * 60 * 1000;
   iterations = _iterations;
   flag_water = true;
   flag_pump_valve = true;
   valve_1 = true;
   valve_2 = false;
   timmer_work = millis() + time_wash;
+  Serial.print("Start: ");
+  Serial.println(time_wash);
 }
 
 bool stop_wash() {
@@ -57,12 +59,12 @@ void variable_wash(uint8_t speed, uint32_t duration) {
   uint32_t static time_duraction = millis();
 
   if (millis() < time_duraction) {
-    Motor::motor_work(speed_wash);
+    Motor::motor_work(speed);
   } else {
     if (millis() > time_duraction) {
       Motor::motor_work(0);
-      Motor::motor_stop();
-      if (millis() > time_duraction + 10000) {
+      // Motor::motor_stop();
+      if (millis() > time_duraction + 6000) {
         time_duraction = millis() + duration;
         Motor::change_deriction();
       }
@@ -91,12 +93,16 @@ void iter_wash() {
       flag_1 = false;
       flag_0 = false;
       timmer_work = millis() + time_rinsing / 2;
-      Serial.println("ITER_1");
+      Serial.println("ITER_OUT_WATER");
     } else {
       bool static flag_2 = true;
       if (flag_2) {
         if (millis() < timmer_work) {
           variable_wash(speed_press, 30000);
+          if (flag_print) {
+            Serial.println("motor_run");
+            flag_print = false;
+          }
         } else {
           switch (iterations) {
             case 1:
@@ -114,15 +120,21 @@ void iter_wash() {
           }
           timmer_work = millis() + time_rinsing / 2;
           flag_2 = false;
+          flag_print = true;
           Serial.println("ITER_2");
         }
       } else {
         if (millis() < timmer_work + time_rinsing / 2) {
           variable_wash(200, 60000);
+          if (flag_print) {
+            Serial.println("motor_run");
+            flag_print = false;
+          }
         } else {
           flag_0 = true;
           flag_1 = true;
           flag_2 = true;
+          flag_print = true;
           iterations -= 1;
           timmer_work = millis() + time_wash;
           Serial.println("ITER_3");
@@ -139,6 +151,7 @@ void water_refresh() {
     } else {
       Water::set_pump(false);
       flag_water = false;
+      Serial.println("Pump_off");
     }
   } else {
     if (!Water::check_water()) {
@@ -146,6 +159,7 @@ void water_refresh() {
     } else {
       Water::set_wash(false, false);
       flag_water = false;
+      Serial.println("Water_off");
     }
   }
 }
@@ -180,7 +194,7 @@ bool main_wash() {
         Temperature::set_temp(0);
       }
       iter_wash();
-      Serial.println("iter_end");
+      // Serial.println("iter_end");
     } else {
       return end_wash();
     }
@@ -190,10 +204,15 @@ bool main_wash() {
 };
 
 
-void test_speed() {
-  Serial.println("test_speed");
+void test_varible_speed(int value) {
+  Serial.println("test_varible_speed");
   uint32_t time = millis();
-  while (millis() - time < 30000) {
-    Washing::variable_wash(60, 10000);
+  bool flag = true;
+  while (millis() - time < 1800000 && flag) {
+    Washing::variable_wash(value, 60000);
+    if (Serial.available() > 1) {flag = false;}
   }
+  Motor::motor_work(0);
+  Motor::motor_stop();
+  Serial.println("end_test");
 }

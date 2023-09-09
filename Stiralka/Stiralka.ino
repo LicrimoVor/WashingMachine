@@ -1,5 +1,4 @@
 bool flag_start = false;
-bool flag_test = false;
 
 void setup() {
   Serial.begin(19200);
@@ -14,16 +13,13 @@ void loop() {
     // Serial.println(__time);
     __time = millis();
   }
-  if (flag_test) {
-    test_motor_work();
-  }
 }
 
 
 void parsing() {
   if (Serial.available() > 1) {
     char incoming = Serial.read();
-    int value = Serial.parseFloat();
+    int value = Serial.parseInt();
     switch (incoming) {
       case 's':
         Serial.println("start...");
@@ -36,16 +32,19 @@ void parsing() {
         test_water_out(value);
         break;
       case 'v':
-        test_speed();
+        test_varible_speed(value);
         break;
       case 'd':
         test_door(value);
         break;
       case 'w':
-        flag_test = value;
+        test_motor_work();
         break;
       case 'c':
         test_change_deriction();
+        break;
+      case 'i':
+        test_water_in(value);
         break;
     }
   }

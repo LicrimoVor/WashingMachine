@@ -17,8 +17,8 @@ void setup_water() {
 }
 
 void set_wash(bool valve_1, bool valve_2) {
-  digitalWrite(PIN_VALVE_1, valve_1);
-  digitalWrite(PIN_VALVE_2, valve_2);
+  digitalWrite(PIN_VALVE_1, !valve_1);
+  digitalWrite(PIN_VALVE_2, !valve_2);
   Serial.println("do water");
 }
 
@@ -43,4 +43,20 @@ void test_water_out(bool lol){
   if (lol) {Door::close_door();}
   else {Door::open_door();}
   Water::set_pump(lol);
+}
+
+
+void test_water_in(bool lol){
+  bool flag = true;
+  if (lol) {
+    while (flag) {
+      Water::set_wash(false, true);
+      if (Serial.available() > 1) {flag = false;}
+    }
+    Water::set_wash(false, false);
+    Serial.println("end_water_in");
+  }
+  else {
+    Water::set_wash(false, false);
+  }
 }

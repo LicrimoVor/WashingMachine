@@ -14,6 +14,7 @@ uint32_t timmer_alpha;
 //GyverPID regulator(0.5, 0.9, 0.008, 100);
 //GyverPID regulator(0.15, 0.1, 0.004, 100);
 GyverPID regulator(0.15, 0.1, 0.004, 100);
+uint8_t speed_motor = 0;
 
 void zero_controller() {
   static int lastDim;
@@ -24,7 +25,7 @@ void zero_controller() {
   else Timer2.restart();
 }
 
-ISR(TIMER1_B) {
+ISR(TIMER2_A) {
   digitalWrite(PIN_MOTOR, 1);  // включаем симистор
   Timer2.stop();               // останавливаем таймер
 }
@@ -59,10 +60,17 @@ void change_deriction() {
     digitalWrite(PIN_DERICTION_2, LOW);
   }
   flag_der = !flag_der;
+  // regulator = GyverPID(0.15, 0.1, 0.004, 100);
   Serial.println("change dir");
 }
 
-void motor_work(int speed_motor) {
+void motor_work(uint8_t _speed_motor) {
+  if (speed_motor < _speed_motor) {
+    speed_motor += 1;
+  }
+  else if (speed_motor > _speed_motor){
+    speed_motor -= 1;
+  }
   regulator.setpoint = speed_motor * 138;
   regulator.input = Tacho::get_speed();
   timmer_alpha = 9500 - regulator.getResultTimer();
@@ -75,6 +83,12 @@ void test_change_deriction(){
 
 
 void test_motor_work(){
-  
-  Motor::motor_work(100);
+  Serial.println("test_motor_work");
+  uint32_t time = millis();
+  while (millis() - time < 3000) {
+    Motor::motor_work(100);
+  }
+  Motor::motor_work(0);
+  Motor::motor_stop();
+  Serial.println("end_test");
 }

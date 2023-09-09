@@ -27,7 +27,7 @@ bool water_lvl;
 void start_wash(uint8_t mode) {
   Washing::create_washing(
     params_list[mode][0], params_list[mode][1],
-    params_list[mode][2] * 60 * 1000, params_list[mode][2]);
+    params_list[mode][2], params_list[mode][2]);
   Door::close_door();
   working = true;
   Serial.println("START_WASH");
